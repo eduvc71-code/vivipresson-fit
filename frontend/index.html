@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIVIPREFIT | Programa de Entrenamiento y Estilo de Vida Saludable</title>
+    <meta name="description"
+        content="Membresía mensual $us. 40. Clases grabadas GAP, Full Body, Cardio HIIT, Fuerza + Aeróbico, rutinas para casa/gimnasio, nutrición y soporte WhatsApp.">
+
+    <script>window.FontAwesomeConfig = { autoReplaceSvg: 'nest' };</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous"
+        referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&family=Poppins:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'bg-base': '#080709',
+                        'bg-elevated': '#131015',
+                        'bg-raised': '#1E1A22',
+                        'border-line': '#332B36',
+                        'text-primary': '#F7F5F8',
+                        'text-secondary': '#9E95A3',
+                        'accent-pink': '#FF2E93',
+                        'whatsapp-green': '#25D366'
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                        heading: ['Montserrat', 'sans-serif'],
+                    },
+                    keyframes: {
+                        marquee: {
+                            '0%': { transform: 'translateX(0)' },
+                            '100%': { transform: 'translateX(-50%)' },
+                        },
+                    },
+                    animation: { marquee: 'marquee 22s linear infinite' },
+                },
+            },
+        };
+    </script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #080709;
+            scroll-behavior: smooth;
+        }
+
+        .font-heading {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .nav-link-underline::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: currentColor;
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-link-underline:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .card-hover-zoom img {
+            transition: transform 0.5s ease;
+        }
+
+        .card-hover-zoom:hover img {
+            transform: scale(1.05);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 300px;
+        }
+
+        .faq-item.active .faq-icon i::before {
+            content: "\f068";
+        }
+
+        .admin-panel {
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .admin-panel.open {
+            transform: translateX(0);
+        }
+
+        .hidden-section {
+            display: none !important;
+        }
+
+        #__text_edit_toolbar button.active {
+            background: #0ea5a0 !important;
+            color: #071013 !important;
+        }
+    </style>
+</head>
+
+<body class="bg-bg-base text-text-primary antialiased selection:bg-accent-pink selection:text-white">
+
+    <!-- Navigation -->
+    <nav
+        class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-7xl bg-bg-raised/90 backdrop-blur-xl border border-border-line rounded-3xl px-6 py-4 flex justify-between items-center shadow-2xl">
+        <a href="#" class="flex items-center shrink-0 gap-3">
+            <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/kxmCS0uETRXhSaxpNduPF6s7FUp1%2Fb0c243d5-c54b-4abc-881b-3fc6783f60a9.png"
+                alt="VIVIPREFIT Logo" data-image-key="logo_header"
+                class="h-14 md:h-16 w-auto object-contain editable-image">
+        </a>
+
+        <div
+            class="hidden lg:flex space-x-8 items-center text-sm font-bold uppercase tracking-widest text-text-secondary">
+            <a href="#inicio" class="relative nav-link-underline hover:text-text-primary transition-colors">Inicio</a>
+            <a href="#pilares"
+                class="relative nav-link-underline hover:text-text-primary transition-colors">Contenido</a>
+            <a href="#clases"
+                class="relative nav-link-underline hover:text-text-primary transition-colors">Biblioteca</a>
+            <a href="#membresia"
+                class="relative nav-link-underline hover:text-text-primary transition-colors">Membresía</a>
+            <a href="#faq" class="relative nav-link-underline hover:text-text-primary transition-colors">Dudas</a>
+
+            <button id="loginBtnNav" onclick="openAuthModal('login')"
+                class="text-text-primary hover:text-accent-pink transition">Ingresar</button>
+            <button id="logoutBtnNav" onclick="handleLogout()"
+                class="hidden text-red-400 hover:text-red-300 transition">Salir</button>
+            <button id="adminBtnNav" onclick="toggleAdminPanel()"
+                class="hidden bg-gray-800 hover:bg-gray-700 text-white p-2 rounded-full ml-2"
+                title="Panel Administrador">
+                <i class="fas fa-cog"></i>
+            </button>
+
+            <a href="#membresia"
+                class="bg-accent-pink text-bg-base px-6 py-3 rounded-full hover:bg-text-primary transition-all shadow-xl shadow-accent-pink/20 font-bold">Unirme
+                por $us. 40</a>
+        </div>
+
+        <button class="lg:hidden text-text-primary"><i class="fas fa-bars text-2xl"></i></button>
+    </nav>
+
+    <!-- Hero Section -->
+    <header id="inicio" class="relative min-h-screen flex items-center pt-28 pb-16 overflow-hidden bg-bg-base">
+        <div class="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center relative z-10">
+            <div class="space-y-8">
+                <span
+                    class="inline-flex items-center gap-2 bg-accent-pink/10 border border-accent-pink/30 text-accent-pink px-4 py-1.5 rounded-full font-semibold tracking-widest uppercase text-xs">
+                    <span class="w-2 h-2 rounded-full bg-accent-pink animate-pulse"></span>
+                    Renovación Mensual Continua
+                </span>
+                <h1 data-text-key="hero_title"
+                    class="font-heading text-4xl md:text-6xl lg:text-7xl font-bold leading-[1.05] tracking-tight text-text-primary">
+                    Programa de Entrenamiento y <br>
+                    <span data-text-key="hero_title_sub" class="text-accent-pink">Estilo de Vida Saludable.</span>
+                </h1>
+                <p data-text-key="hero_sub" class="text-text-secondary text-lg leading-relaxed max-w-lg">
+                    Un método completo y dinámico que combina clases grabadas bajo demanda, rutinas de fuerza
+                    estructuradas para casa o gimnasio, educación alimentaria y soporte directo por WhatsApp.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 pt-2">
+                    <a href="#membresia"
+                        class="inline-block bg-accent-pink text-bg-base px-8 py-4 rounded-full font-bold hover:bg-text-primary transition-all text-center shadow-lg shadow-accent-pink/25 cursor-pointer">
+                        Inscribirme por $us. 40 / mes
+                    </a>
+                    <a href="#pilares"
+                        class="inline-block border border-border-line text-text-primary px-8 py-4 rounded-full font-bold hover:border-accent-pink hover:text-accent-pink transition-all text-center">
+                        Explorar Contenido
+                    </a>
+                </div>
+                <div class="flex items-center gap-6 pt-2 text-xs text-text-secondary">
+                    <span class="flex items-center gap-2"><i class="fas fa-rotate text-accent-pink"></i> Contenido
+                        renovado cada mes</span>
+                    <span class="flex items-center gap-2"><i class="fab fa-whatsapp text-whatsapp-green"></i> Soporte
+                        personalizado</span>
+                </div>
+            </div>
+            <div class="relative">
+                <div
+                    class="aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl card-hover-zoom border border-border-line relative group">
+                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_245b9a20f6_398de8d243341492.png"
+                        alt="Entrenamiento ViviPreFit" data-image-key="hero_main"
+                        class="w-full h-full object-cover editable-image">
+                    <div class="absolute inset-0 bg-gradient-to-t from-bg-base/80 via-transparent to-transparent"></div>
+                    <div
+                        class="absolute bottom-6 left-6 right-6 p-4 rounded-2xl bg-bg-raised/80 backdrop-blur-md border border-border-line">
+                        <p class="text-xs uppercase font-bold text-accent-pink tracking-wider">Membresía Mensual</p>
+                        <p class="text-sm font-semibold text-white">Acceso 24/7 a todas las clases y asesoría
+                            nutricional</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Marquee -->
+    <div class="py-6 border-y border-border-line bg-bg-base overflow-hidden whitespace-nowrap">
+        <div class="inline-block animate-marquee">
+            <span class="font-heading text-3xl font-extrabold opacity-30 mx-8 text-text-primary">GAP: GLÚTEOS, ABDOMEN Y
+                PIERNAS</span>
+            <span class="font-heading text-3xl font-extrabold text-accent-pink opacity-40 mx-8">•</span>
+            <span class="font-heading text-3xl font-extrabold opacity-30 mx-8 text-text-primary">FULL BODY
+                COMPLETO</span>
+            <span class="font-heading text-3xl font-extrabold text-accent-pink opacity-40 mx-8">•</span>
+            <span class="font-heading text-3xl font-extrabold opacity-30 mx-8 text-text-primary">CARDIO HIIT QUEMA
+                GRASA</span>
+            <span class="font-heading text-3xl font-extrabold text-accent-pink opacity-40 mx-8">•</span>
+            <span class="font-heading text-3xl font-extrabold opacity-30 mx-8 text-text-primary">FUERZA +
+                AERÓBICO</span>
+            <span class="font-heading text-3xl font-extrabold text-accent-pink opacity-40 mx-8">•</span>
+            <span class="font-heading text-3xl font-extrabold opacity-30 mx-8 text-text-primary">SOPORTE POR
+                WHATSAPP</span>
+            <span class="font-heading text-3xl font-extrabold text-accent-pink opacity-40 mx-8">•</span>
+        </div>
+    </div>
+
+    <!-- Pilares -->
+    <section id="pilares" class="py-24 bg-bg-elevated">
+        <div class="container mx-auto px-6">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <span class="text-accent-pink font-semibold tracking-widest uppercase text-xs">Estructura del
+                    Programa</span>
+                <h2 data-text-key="pilares_title"
+                    class="font-heading text-3xl md:text-5xl font-bold mt-3 text-text-primary">
+                    Todo lo que incluye tu membresía
+                </h2>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div
+                    class="bg-bg-raised p-7 rounded-2xl border border-border-line hover:border-accent-pink transition duration-300 group">
+                    <div class="w-14 h-14 bg-bg-base rounded-2xl flex items-center justify-center mb-6 text-accent-pink text-2xl border border-border-line"
+                        data-icon-key="pilar1"><i class="fas fa-play"></i></div>
+                    <h3 class="font-heading text-xl font-bold mb-3 text-text-primary">1. Biblioteca de Clases Grabadas
+                    </h3>
+                    <p class="text-text-secondary text-sm leading-relaxed">Acceso ilimitado a sesiones completas de
+                        <strong>GAP</strong>, <strong>Full Body</strong>, <strong>Cardio HIIT</strong> y <strong>Fuerza
+                            + Aeróbico</strong>.</p>
+                </div>
+                <div
+                    class="bg-bg-raised p-7 rounded-2xl border border-border-line hover:border-accent-pink transition duration-300 group">
+                    <div class="w-14 h-14 bg-bg-base rounded-2xl flex items-center justify-center mb-6 text-accent-pink text-2xl border border-border-line"
+                        data-icon-key="pilar2"><i class="fas fa-dumbbell"></i></div>
+                    <h3 class="font-heading text-xl font-bold mb-3 text-text-primary">2. Plan de Entrenamiento</h3>
+                    <p class="text-text-secondary text-sm leading-relaxed">Rutinas de fuerza <strong>3 veces por
+                            semana</strong> para casa o gimnasio.</p>
+                </div>
+                <div
+                    class="bg-bg-raised p-7 rounded-2xl border border-border-line hover:border-accent-pink transition duration-300 group">
+                    <div class="w-14 h-14 bg-bg-base rounded-2xl flex items-center justify-center mb-6 text-whatsapp-green text-2xl border border-border-line"
+                        data-icon-key="pilar3"><i class="fab fa-whatsapp"></i></div>
+                    <h3 class="font-heading text-xl font-bold mb-3 text-text-primary">3. Nutrición & Acompañamiento</h3>
+                    <p class="text-text-secondary text-sm leading-relaxed">Educación alimentaria + <strong>soporte
+                            personalizado por WhatsApp</strong>.</p>
+                </div>
+                <div
+                    class="bg-bg-raised p-7 rounded-2xl border border-border-line hover:border-accent-pink transition duration-300 group">
+                    <div class="w-14 h-14 bg-bg-base rounded-2xl flex items-center justify-center mb-6 text-accent-pink text-2xl border border-border-line"
+                        data-icon-key="pilar4"><i class="fas fa-arrows-rotate"></i></div>
+                    <h3 class="font-heading text-xl font-bold mb-3 text-text-primary">4. Dinámica del Servicio</h3>
+                    <p class="text-text-secondary text-sm leading-relaxed"><strong>Renovación mensual:</strong> rutinas,
+                        clases y recursos nuevos cada ciclo.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Clases -->
+    <section id="clases" class="py-24 bg-bg-base border-t border-border-line">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-6">
+                <div>
+                    <span class="text-accent-pink font-semibold tracking-widest uppercase text-xs">Variedad y
+                        Enfoque</span>
+                    <h2 class="font-heading text-3xl md:text-5xl font-bold mt-2 text-text-primary">Biblioteca de Clases
+                        Grabadas</h2>
+                </div>
+                <a href="#membresia" class="text-accent-pink font-bold hover:underline flex items-center gap-2">Ver
+                    detalles de inscripción <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-bg-elevated p-6 rounded-2xl border border-border-line">
+                    <span
+                        class="inline-block bg-accent-pink/20 text-accent-pink text-xs font-bold px-3 py-1 rounded-full mb-4">Firmeza</span>
+                    <h3 class="font-heading text-2xl font-bold mb-2 text-text-primary">GAP</h3>
+                    <p class="text-text-secondary text-sm">Glúteos, Abdomen y Piernas: firmeza y tonificación muscular.
+                    </p>
+                </div>
+                <div class="bg-bg-elevated p-6 rounded-2xl border border-border-line">
+                    <span
+                        class="inline-block bg-accent-pink/20 text-accent-pink text-xs font-bold px-3 py-1 rounded-full mb-4">Global</span>
+                    <h3 class="font-heading text-2xl font-bold mb-2 text-text-primary">Full Body</h3>
+                    <p class="text-text-secondary text-sm">Trabajo integral de cada grupo muscular.</p>
+                </div>
+                <div class="bg-bg-elevated p-6 rounded-2xl border border-border-line">
+                    <span
+                        class="inline-block bg-accent-pink/20 text-accent-pink text-xs font-bold px-3 py-1 rounded-full mb-4">Intensidad</span>
+                    <h3 class="font-heading text-2xl font-bold mb-2 text-text-primary">Cardio HIIT</h3>
+                    <p class="text-text-secondary text-sm">Quema calórica y resistencia cardiovascular.</p>
+                </div>
+                <div class="bg-bg-elevated p-6 rounded-2xl border border-border-line">
+                    <span
+                        class="inline-block bg-accent-pink/20 text-accent-pink text-xs font-bold px-3 py-1 rounded-full mb-4">Híbrido</span>
+                    <h3 class="font-heading text-2xl font-bold mb-2 text-text-primary">Fuerza + Aeróbico</h3>
+                    <p class="text-text-secondary text-sm">Resistencia muscular y capacidad aeróbica.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Nutrición -->
+    <section id="educativo" class="py-24 bg-bg-elevated">
+        <div class="container mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
+            <div class="relative">
+                <div class="aspect-square rounded-3xl overflow-hidden border border-border-line shadow-2xl">
+                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_bcbde05bb8_c9ad26c2d0ca8065.png"
+                        alt="Nutrición" data-image-key="educacion_card"
+                        class="w-full h-full object-cover editable-image">
+                </div>
+            </div>
+            <div class="space-y-8">
+                <span class="text-accent-pink font-semibold tracking-widest uppercase text-xs">Nutrición y
+                    Acompañamiento</span>
+                <h2 class="font-heading text-3xl md:text-5xl font-bold text-text-primary leading-tight">Aprende a nutrir
+                    tu cuerpo sin dietas imposibles</h2>
+                <p class="text-text-secondary leading-relaxed">Hábitos sostenibles, educación alimentaria y soporte
+                    directo con tu coach vía WhatsApp.</p>
+                <div class="space-y-6">
+                    <div class="flex gap-4 items-start">
+                        <div
+                            class="shrink-0 w-12 h-12 rounded-2xl bg-bg-base border border-border-line flex items-center justify-center text-accent-pink text-xl">
+                            <i class="fas fa-book-open"></i></div>
+                        <div>
+                            <h4 class="font-bold text-text-primary text-lg">Educación Alimentaria Práctica</h4>
+                            <p class="text-text-secondary text-sm">Guías mensuales para comer consciente y saludable.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 items-start">
+                        <div
+                            class="shrink-0 w-12 h-12 rounded-2xl bg-bg-base border border-border-line flex items-center justify-center text-whatsapp-green text-xl">
+                            <i class="fab fa-whatsapp"></i></div>
+                        <div>
+                            <h4 class="font-bold text-text-primary text-lg">Soporte Personalizado vía WhatsApp</h4>
+                            <p class="text-text-secondary text-sm">Canal directo para resolver dudas técnicas y de
+                                nutrición.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Membresía -->
+    <section id="membresia" class="py-24 bg-bg-base relative overflow-hidden">
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <span class="text-accent-pink font-semibold tracking-widest uppercase text-xs">Suscripción Simple y
+                    Transparente</span>
+                <h2 data-text-key="membresias_title"
+                    class="font-heading text-3xl md:text-5xl font-bold mt-3 text-text-primary">Tu Membresía Mensual Todo
+                    Incluido</h2>
+                <p class="text-text-secondary mt-3">Sin contratos a largo plazo. Cancela o renueva cuando quieras.</p>
+            </div>
+            <div class="max-w-xl mx-auto">
+                <div
+                    class="bg-bg-raised p-8 md:p-10 rounded-3xl border-2 border-accent-pink relative shadow-2xl shadow-accent-pink/10">
+                    <span
+                        class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-accent-pink text-bg-base px-5 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-widest">Plan
+                        Completo Todo Incluido</span>
+                    <div class="text-center pb-8 border-b border-border-line">
+                        <h3 class="font-heading text-2xl md:text-3xl font-bold text-text-primary">Programa Estilo de
+                            Vida Saludable</h3>
+                        <p class="text-text-secondary text-sm mt-2">Acceso total + acompañamiento mensual</p>
+                        <div class="mt-6 flex items-baseline justify-center gap-2">
+                            <span class="text-5xl md:text-6xl font-extrabold text-text-primary font-heading"
+                                data-price-display>$us. 40</span>
+                            <span class="text-text-secondary font-medium">/ mes</span>
+                        </div>
+                    </div>
+                    <div class="py-8">
+                        <p class="text-xs uppercase tracking-wider text-text-secondary font-bold mb-4">Lo que recibes
+                            cada mes:</p>
+                        <ul class="space-y-4 text-text-secondary text-sm">
+                            <li class="flex items-start"><i
+                                    class="fas fa-check-circle text-accent-pink mr-3 mt-1"></i><span><strong>Clases
+                                        Grabadas:</strong> GAP, Full Body, Cardio HIIT, Fuerza + Aeróbico.</span></li>
+                            <li class="flex items-start"><i
+                                    class="fas fa-check-circle text-accent-pink mr-3 mt-1"></i><span><strong>Rutinas
+                                        3x/semana:</strong> Casa y Gimnasio.</span></li>
+                            <li class="flex items-start"><i
+                                    class="fas fa-check-circle text-accent-pink mr-3 mt-1"></i><span><strong>Educación
+                                        Alimentaria:</strong> Guías nutricionales.</span></li>
+                            <li class="flex items-start"><i
+                                    class="fas fa-check-circle text-whatsapp-green mr-3 mt-1"></i><span><strong>Soporte
+                                        WhatsApp:</strong> Atención personalizada.</span></li>
+                            <li class="flex items-start"><i
+                                    class="fas fa-check-circle text-accent-pink mr-3 mt-1"></i><span><strong>Renovación
+                                        mensual:</strong> Contenido nuevo cada ciclo.</span></li>
+                        </ul>
+                    </div>
+                    <button onclick="openAuthModal('register')"
+                        class="w-full py-4 bg-accent-pink text-bg-base rounded-full font-bold text-base hover:bg-white transition-all shadow-lg shadow-accent-pink/20">
+                        Suscribirme por $us. 40 / mes
+                    </button>
+                    <p class="text-center text-xs text-text-secondary mt-4">Acceso inmediato tras completar tu registro.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="py-24 bg-bg-elevated border-t border-border-line">
+        <div class="container mx-auto px-6 max-w-3xl">
+            <div class="text-center mb-12">
+                <span class="text-accent-pink font-semibold tracking-widest uppercase text-xs">Preguntas
+                    Frecuentes</span>
+                <h2 class="font-heading text-3xl md:text-5xl font-bold mt-2 text-text-primary">¿Tienes alguna duda?</h2>
+            </div>
+            <div class="space-y-4">
+                <div class="faq-item border border-border-line bg-bg-raised rounded-2xl p-5 cursor-pointer"
+                    onclick="toggleFaq(this)">
+                    <button
+                        class="w-full flex justify-between items-center text-left font-semibold text-base md:text-lg text-text-primary">
+                        ¿Cómo funciona la renovación mensual del contenido?
+                        <span class="faq-icon text-accent-pink transition-transform ml-4"><i
+                                class="fas fa-plus"></i></span>
+                    </button>
+                    <div class="faq-answer">
+                        <p class="pt-4 text-text-secondary text-sm leading-relaxed">Cada mes se actualizan las clases
+                            (GAP, Full Body, Cardio HIIT, Fuerza), las rutinas 3x y los recursos de alimentación.</p>
+                    </div>
+                </div>
+                <div class="faq-item border border-border-line bg-bg-raised rounded-2xl p-5 cursor-pointer"
+                    onclick="toggleFaq(this)">
+                    <button
+                        class="w-full flex justify-between items-center text-left font-semibold text-base md:text-lg text-text-primary">
+                        ¿Puedo entrenar si no tengo equipo o no voy al gimnasio?
+                        <span class="faq-icon text-accent-pink transition-transform ml-4"><i
+                                class="fas fa-plus"></i></span>
+                    </button>
+                    <div class="faq-answer">
+                        <p class="pt-4 text-text-secondary text-sm leading-relaxed">¡Sí! Las rutinas tienen variantes
+                            para casa con materiales mínimos y para gimnasio.</p>
+                    </div>
+                </div>
+                <div class="faq-item border border-border-line bg-bg-raised rounded-2xl p-5 cursor-pointer"
+                    onclick="toggleFaq(this)">
+                    <button
+                        class="w-full flex justify-between items-center text-left font-semibold text-base md:text-lg text-text-primary">
+                        ¿Cómo recibo el soporte personalizado por WhatsApp?
+                        <span class="faq-icon text-accent-pink transition-transform ml-4"><i
+                                class="fas fa-plus"></i></span>
+                    </button>
+                    <div class="faq-answer">
+                        <p class="pt-4 text-text-secondary text-sm leading-relaxed">Al activar tu suscripción, tu
+                            dashboard incluirá el enlace directo a WhatsApp de tu coach.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="unete" class="bg-bg-base pt-20 pb-12 border-t border-border-line">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-12 mb-16">
+                <div class="md:col-span-2 space-y-4">
+                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/kxmCS0uETRXhSaxpNduPF6s7FUp1%2Fb0c243d5-c54b-4abc-881b-3fc6783f60a9.png"
+                        alt="Logo" data-image-key="logo_footer" class="h-16 w-auto object-contain editable-image">
+                    <p class="text-text-secondary max-w-sm text-sm">Programa de Entrenamiento y Estilo de Vida
+                        Saludable. Tu espacio integral para entrenar con propósito.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 text-text-primary text-sm uppercase tracking-wider">Estructura</h4>
+                    <ul class="space-y-3 text-text-secondary text-sm">
+                        <li><a href="#clases" class="hover:text-accent-pink transition-colors">Clases Grabadas</a></li>
+                        <li><a href="#pilares" class="hover:text-accent-pink transition-colors">Plan de Fuerza 3x</a>
+                        </li>
+                        <li><a href="#educativo" class="hover:text-accent-pink transition-colors">Educación
+                                Alimentaria</a></li>
+                        <li><a href="#membresia" class="hover:text-accent-pink transition-colors">Membresía $us. 40</a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 text-text-primary text-sm uppercase tracking-wider">Contacto & Soporte
+                    </h4>
+                    <ul class="space-y-3 text-text-secondary text-sm">
+                        <li><a id="footerWhatsappLink" href="https://wa.me/59178000000" target="_blank"
+                                class="hover:text-whatsapp-green transition-colors flex items-center gap-2"><i
+                                    class="fab fa-whatsapp"></i> WhatsApp Soporte</a></li>
+                        <li><a href="#" class="hover:text-accent-pink transition-colors">Términos del Servicio</a></li>
+                        <li><a href="#" class="hover:text-accent-pink transition-colors">Política de Privacidad</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div
+                class="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-border-line text-xs text-text-secondary">
+                <p>© 2026 VIVIPREFIT. Todos los derechos reservados.</p>
+                <p class="mt-2 md:mt-0">Suscripción mensual $us. 40.- / mes</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL AUTH -->
+    <div id="authModal"
+        class="fixed inset-0 z-[60] hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-bg-raised w-full max-w-md rounded-2xl p-8 relative border border-border-line shadow-2xl">
+            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i
+                    class="fas fa-times"></i></button>
+            <h3 id="modalTitle" class="text-2xl font-bold mb-2 text-center font-heading">Únete al Programa</h3>
+            <p id="modalSub" class="text-center text-text-secondary text-sm mb-6">Membresía Mensual • $us. 40.-/mes</p>
+            <form id="authForm" onsubmit="handleAuthSubmit(event)" class="space-y-4">
+                <input type="email" id="email" placeholder="Tu correo electrónico" required
+                    class="w-full bg-bg-base border border-border-line rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent-pink transition">
+                <input type="password" id="password" placeholder="Contraseña (mínimo 6 caracteres)" required
+                    class="w-full bg-bg-base border border-border-line rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent-pink transition">
+                <input type="text" id="fullName" placeholder="Nombre completo"
+                    class="w-full bg-bg-base border border-border-line rounded-lg px-4 py-3 text-white focus:outline-none focus:border-accent-pink transition">
+                <button type="submit" id="submitBtn"
+                    class="w-full bg-accent-pink text-bg-base font-bold py-3.5 rounded-full hover:bg-white transition-all shadow-lg shadow-accent-pink/20">Suscribirme
+                    por $us. 40 / mes</button>
+            </form>
+            <p class="mt-6 text-center text-sm text-text-secondary">
+                <span id="authToggleQuestion">¿Ya eres alumna del programa?</span>
+                <button onclick="toggleAuthMode()" id="authToggleBtn"
+                    class="text-accent-pink hover:underline font-bold">Inicia sesión</button>
+            </p>
+        </div>
+    </div>
+
+    <!-- PANEL ADMIN -->
+    <div id="adminPanel"
+        class="admin-panel fixed top-0 right-0 h-full w-full md:w-[450px] bg-bg-raised border-l border-border-line z-[70] shadow-2xl overflow-y-auto">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-2xl font-bold font-heading text-white">Panel de Administración</h2>
+                <button onclick="toggleAdminPanel()" class="text-gray-400 hover:text-white"><i
+                        class="fas fa-times text-xl"></i></button>
+            </div>
+            <div class="space-y-6">
+                <div class="bg-bg-base p-4 rounded-xl border border-border-line">
+                    <h3 class="font-bold text-accent-pink mb-4 flex items-center"><i class="fas fa-gear mr-2"></i>
+                        Parámetros de la Membresía</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1">Precio Mensual ($us)</label>
+                            <input type="number" id="adminMonthlyPrice"
+                                class="w-full bg-bg-raised border border-border-line rounded p-2 text-sm text-white"
+                                value="40">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1">Número de WhatsApp (con código país)</label>
+                            <input type="text" id="adminWhatsappNumber"
+                                class="w-full bg-bg-raised border border-border-line rounded p-2 text-sm text-white"
+                                value="59178000000">
+                        </div>
+                        <button onclick="saveMembershipParams()"
+                            class="w-full bg-accent-pink text-bg-base py-2 rounded text-sm font-bold hover:bg-white transition">Guardar
+                            Parámetros</button>
+                    </div>
+                </div>
+
+                <div class="bg-bg-base p-4 rounded-xl border border-border-line">
+                    <h3 class="font-bold text-accent-pink mb-4 flex items-center"><i class="fas fa-edit mr-2"></i>
+                        Textos Principales</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1">Título Hero</label>
+                            <input type="text" id="adminHeroTitle"
+                                class="w-full bg-bg-raised border border-border-line rounded p-2 text-sm text-white"
+                                value="Programa de Entrenamiento y Estilo de Vida Saludable">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1">Descripción</label>
+                            <textarea id="adminHeroSub"
+                                class="w-full bg-bg-raised border border-border-line rounded p-2 text-sm text-white h-20">Un método completo y dinámico...</textarea>
+                        </div>
+                        <button onclick="saveContent()"
+                            class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded text-sm font-bold transition">Guardar
+                            Textos</button>
+                    </div>
+                </div>
+
+                <div class="bg-bg-base p-4 rounded-xl border border-border-line">
+                    <h3 class="font-bold text-accent-pink mb-4 flex items-center"><i class="fas fa-upload mr-2"></i>
+                        Publicar Contenido del Mes</h3>
+                    <div class="space-y-3">
+                        <select id="contentType"
+                            class="w-full bg-bg-raised border border-border-line rounded p-2 text-sm text-white">
+                            <option value="gap">Clase: GAP</option>
+                            <option value="full_body">Clase: Full Body</option>
+                            <option value="hiit">Clase: Cardio HIIT</option>
+                            <option value="aerobico">Clase: Fuerza + Aeróbico</option>
+                            <option value="rutina_casa">Rutina Fuerza 3x: Casa</option>
+                            <option value="rutina_gym">Rutina Fuerza 3x: Gimnasio</option>
+                            <option value="nutricion">Guía de Educación Alimentaria</option>
+                        </select>
+                        <input type="text" id="contentTitle" placeholder="Título (ej: Semana 1 - GAP Intenso)"
+                            class="w-full bg-bg-raised border border-border-line rounded p-2 text-sm text-white">
+                        <input type="url" id="contentUrl" placeholder="URL Bunny Stream o enlace seguro"
+                            class="w-full bg-bg-raised border border-border-line rounded p-2 text-sm text-white">
+                        <button onclick="uploadContent()"
+                            class="w-full bg-accent-pink text-bg-base py-2 rounded text-sm font-bold hover:bg-white transition">Publicar
+                            en Plataforma</button>
+                    </div>
+                </div>
+
+                <div class="bg-bg-base p-4 rounded-xl border border-border-line">
+                    <h3 class="font-bold text-accent-pink mb-4 flex items-center"><i class="fas fa-users mr-2"></i>
+                        Alumnas Registradas</h3>
+                    <div id="userList" class="space-y-2">
+                        <p class="text-xs text-gray-500">Cargando lista...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DASHBOARD USUARIO -->
+    <div id="userDashboard" class="hidden-section min-h-screen bg-bg-base pt-32 pb-16 px-6">
+        <div class="container mx-auto max-w-5xl">
+            <div
+                class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 border-b border-border-line pb-6 gap-4">
+                <div>
+                    <h1 class="text-3xl md:text-4xl font-bold font-heading text-white mb-2">¡Hola, <span
+                            id="dashUserName">Alumna</span>! 👋</h1>
+                    <p class="text-text-secondary text-sm">Bienvenida a tu Programa de Entrenamiento y Estilo de Vida
+                        Saludable.</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a id="dashWhatsappLink" href="https://wa.me/59178000000" target="_blank"
+                        class="bg-whatsapp-green hover:bg-emerald-600 text-white px-4 py-2 rounded-full text-xs font-bold transition flex items-center gap-2">
+                        <i class="fab fa-whatsapp text-sm"></i> Soporte Coach
+                    </a>
+                    <div class="text-right">
+                        <span class="block text-[10px] text-gray-400 uppercase tracking-wider">Membresía</span>
+                        <span id="dashStatus"
+                            class="inline-block bg-accent-pink text-bg-base px-3 py-1 rounded-full text-xs font-bold">Activa
+                            ($us. 40/mes)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-12">
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-xl font-bold text-white flex items-center"><i
+                                class="fas fa-play-circle text-accent-pink mr-3"></i> Clases del Mes</h3>
+                        <span class="text-xs text-accent-pink uppercase font-semibold">Contenido Dinámico</span>
+                    </div>
+                    <div id="classesContainer" class="space-y-3">
+                        <p class="text-xs text-gray-500">Cargando clases...</p>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-xl font-bold text-white flex items-center"><i
+                                class="fas fa-dumbbell text-accent-pink mr-3"></i> Rutinas 3x & Nutrición</h3>
+                        <span class="text-xs text-accent-pink uppercase font-semibold">Casa / Gym</span>
+                    </div>
+                    <div id="resourcesContainer" class="space-y-3">
+                        <p class="text-xs text-gray-500">Cargando recursos...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="bg-bg-elevated rounded-2xl p-6 md:p-8 border border-border-line flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="flex items-center gap-5">
+                    <div
+                        class="w-14 h-14 bg-whatsapp-green/20 rounded-2xl flex items-center justify-center text-whatsapp-green text-3xl shrink-0">
+                        <i class="fab fa-whatsapp"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-white text-lg">Soporte Continuo con tu Coach</h4>
+                        <p class="text-text-secondary text-sm">¿Dudas con una postura, peso o tu alimentación? Tu coach
+                            está a un mensaje de distancia.</p>
+                    </div>
+                </div>
+                <a id="dashWhatsappBanner" href="https://wa.me/59178000000" target="_blank"
+                    class="bg-whatsapp-green hover:bg-emerald-600 text-white font-bold px-6 py-3 rounded-full text-sm transition shrink-0">
+                    Chatear por WhatsApp
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- LÓGICA JAVASCRIPT -->
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+        const SUPABASE_URL = 'https://hquwcljvnofhxtvrwjis.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhxdXdjbGp2bm9maHh0dnJ3amlzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAxMTk3ODQsImV4cCI6MjEwNTY5NTc4NH0.W0iIL099ztITe-bdqTRhQpq4HMIgXbyv15nY_4XO1kU';
+        const BUNNY_TOKEN_ENDPOINT = `${SUPABASE_URL}/functions/v1/bunny-token`;
+
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        window.supabase = supabase;
+
+        let isLoginMode = false;
+        let currentUser = null;
+        let currentProfile = null;
+        let landingConfigCache = {};
+
+        // ============================================================
+        // UTILIDADES
+        // ============================================================
+        window.toggleFaq = (el) => el.classList.toggle('active');
+
+        window.openAuthModal = (type) => {
+            document.getElementById('authModal').classList.remove('hidden');
+            toggleAuthMode(type === 'login');
+        };
+        window.closeAuthModal = () => document.getElementById('authModal').classList.add('hidden');
+
+        window.toggleAuthMode = (loginMode) => {
+            if (typeof loginMode === 'undefined') isLoginMode = !isLoginMode;
+            else isLoginMode = loginMode;
+            const title = document.getElementById('modalTitle');
+            const sub = document.getElementById('modalSub');
+            const submitBtn = document.getElementById('submitBtn');
+            const nameInput = document.getElementById('fullName');
+            const toggleQ = document.getElementById('authToggleQuestion');
+            const toggleBtn = document.getElementById('authToggleBtn');
+            if (isLoginMode) {
+                title.innerText = "Iniciar Sesión";
+                sub.innerText = "Accede a tu contenido del mes";
+                submitBtn.innerText = "Entrar a mi Cuenta";
+                nameInput.classList.add('hidden');
+                toggleQ.innerText = "¿Aún no eres miembro?";
+                toggleBtn.innerText = "Inscríbete aquí";
+            } else {
+                title.innerText = "Únete al Programa";
+                sub.innerText = "Membresía Mensual • $us. 40.-/mes";
+                submitBtn.innerText = "Suscribirme por $us. 40 / mes";
+                nameInput.classList.remove('hidden');
+                toggleQ.innerText = "¿Ya eres alumna del programa?";
+                toggleBtn.innerText = "Inicia sesión";
+            }
+        };
+
+        window.toggleAdminPanel = () => {
+            document.getElementById('adminPanel').classList.toggle('open');
+            if (document.getElementById('adminPanel').classList.contains('open')) loadAdminData();
+        };
+
+        window.handleLogout = async () => {
+            await supabase.auth.signOut();
+            window.location.reload();
+        };
+
+        // ============================================================
+        // CARGA DE CONFIGURACIÓN DINÁMICA (hidratación)
+        // ============================================================
+        async function loadLandingConfig() {
+            const { data, error } = await supabase.from('landing_config').select('key, value');
+            if (error) { console.warn('landing_config error', error); return; }
+            landingConfigCache = {};
+            (data || []).forEach(row => { landingConfigCache[row.key] = row.value; });
+
+            // Membership params
+            const mp = landingConfigCache['membership_params'] || {};
+            if (mp.price) {
+                document.querySelectorAll('[data-price-display]').forEach(el => {
+                    el.textContent = `$us. ${mp.price}`;
+                });
+            }
+            if (mp.whatsapp_number) {
+                const waLink = `https://wa.me/${mp.whatsapp_number}`;
+                ['dashWhatsappLink', 'dashWhatsappBanner', 'footerWhatsappLink'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.href = waLink;
+                });
+                const adminWa = document.getElementById('adminWhatsappNumber');
+                if (adminWa) adminWa.value = mp.whatsapp_number;
+            }
+            const adminPrice = document.getElementById('adminMonthlyPrice');
+            if (adminPrice && mp.price) adminPrice.value = mp.price;
+
+            // Hero texts legacy
+            const hero = landingConfigCache['hero_texts'];
+            if (hero) {
+                const adminTitle = document.getElementById('adminHeroTitle');
+                const adminSub = document.getElementById('adminHeroSub');
+                if (adminTitle && hero.title) adminTitle.value = hero.title;
+                if (adminSub && hero.sub) adminSub.value = hero.sub;
+            }
+
+            // Text: keys
+            Object.keys(landingConfigCache).forEach(key => {
+                if (key.startsWith('text:')) {
+                    const textKey = key.slice(5);
+                    const val = landingConfigCache[key] || {};
+                    const el = document.querySelector(`[data-text-key="${textKey}"]`);
+                    if (el && val.text !== undefined) {
+                        el.innerHTML = val.text;
+                        if (val.fontFamily) el.style.fontFamily = val.fontFamily;
+                        if (val.fontSize) el.style.fontSize = val.fontSize;
+                        if (val.color) el.style.color = val.color;
+                        if (val.fontWeight) el.style.fontWeight = val.fontWeight;
+                        if (val.fontStyle) el.style.fontStyle = val.fontStyle;
+                    }
+                }
+                if (key.startsWith('media:')) {
+                    const mediaKey = key.slice(6);
+                    const url = typeof landingConfigCache[key] === 'string'
+                        ? landingConfigCache[key]
+                        : (landingConfigCache[key]?.url || '');
+                    if (!url) return;
+                    const img = document.querySelector(`img[data-image-key="${mediaKey}"]`);
+                    const vid = document.querySelector(`video[data-media-key="${mediaKey}"]`);
+                    if (img) img.src = url;
+                    if (vid) {
+                        const source = vid.querySelector('source');
+                        if (source) source.src = url; else vid.src = url;
+                        vid.load();
+                    }
+                }
+                if (key.startsWith('icon:')) {
+                    const iconKey = key.slice(5);
+                    const cls = typeof landingConfigCache[key] === 'string'
+                        ? landingConfigCache[key]
+                        : (landingConfigCache[key]?.cls || '');
+                    const host = document.querySelector(`[data-icon-key="${iconKey}"] i`);
+                    if (host && cls) host.className = cls;
+                }
+            });
+        }
+
+        // ============================================================
+        // AUTH
+        // ============================================================
+        window.handleAuthSubmit = async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const fullName = document.getElementById('fullName').value.trim();
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            const originalText = btn.innerText;
+            btn.innerText = "Procesando...";
+
+            try {
+                if (isLoginMode) {
+                    const { error } = await supabase.auth.signInWithPassword({ email, password });
+                    if (error) throw error;
+                } else {
+                    const { data, error } = await supabase.auth.signUp({
+                        email, password,
+                        options: { data: { full_name: fullName || email.split('@')[0] } }
+                    });
+                    if (error) throw error;
+                    // Asignar estado 'active' (demo/mock hasta integración Stripe real)
+                    if (data?.user) {
+                        await supabase.from('profiles').upsert({
+                            id: data.user.id,
+                            email: data.user.email,
+                            full_name: fullName || email.split('@')[0],
+                            plan_status: 'active',
+                            plan_tier: 'monthly_40',
+                            updated_at: new Date().toISOString()
+                        });
+                    }
+                    alert("¡Bienvenida a VIVIPREFIT! Tu membresía de $us. 40.-/mes está activa.");
+                }
+                closeAuthModal();
+                await checkUserStatus();
+            } catch (error) {
+                console.error('Auth error', error);
+                alert("Error: " + (error?.message || JSON.stringify(error)));
+            } finally {
+                btn.disabled = false;
+                btn.innerText = originalText;
+            }
+        };
+
+        // ============================================================
+        // ESTADO DE USUARIO
+        // ============================================================
+        async function checkUserStatus() {
+            const { data: { user } } = await supabase.auth.getUser();
+            currentUser = user;
+
+            if (user) {
+                document.getElementById('loginBtnNav').classList.add('hidden');
+                document.getElementById('logoutBtnNav').classList.remove('hidden');
+
+                let profile = null;
+                try {
+                    const { data } = await supabase.from('profiles').select('*').eq('id', user.id).maybeSingle();
+                    profile = data || null;
+                } catch (err) { console.warn('profile fetch error', err); }
+                currentProfile = profile;
+
+                const isAdmin = !!(profile?.is_admin) || user.email === 'admin@vivipressonfit.com' || user.email === 'edusoftware2026@gmail.com';
+                window.isAdmin = isAdmin;
+                if (isAdmin) {
+                    document.getElementById('adminBtnNav').classList.remove('hidden');
+                    try { enableImageEditing(); enableTextEditing(); enableIconEditing(); } catch (e) { console.warn(e); }
+                }
+
+                // Si NO es admin, ocultar landing y mostrar dashboard
+                if (!isAdmin) {
+                    document.querySelectorAll('header, #pilares, #clases, #educativo, #membresia, #faq, footer').forEach(el => el.classList.add('hidden-section'));
+                }
+                document.getElementById('userDashboard').classList.remove('hidden-section');
+                document.getElementById('dashUserName').innerText = profile?.full_name || user.user_metadata?.full_name || user.email.split('@')[0];
+
+                const statusEl = document.getElementById('dashStatus');
+                if (statusEl && profile) {
+                    if (profile.plan_status === 'active') statusEl.innerText = "Membresía Activa ($us. 40/mes)";
+                    else if (profile.plan_status === 'past_due') { statusEl.innerText = "Pago pendiente"; statusEl.classList.add('bg-red-600'); }
+                    else if (profile.plan_status === 'canceled') { statusEl.innerText = "Cancelada"; statusEl.classList.add('bg-red-600'); }
+                }
+
+                await loadDashboardContent();
+            } else {
+                document.getElementById('loginBtnNav').classList.remove('hidden');
+                document.getElementById('logoutBtnNav').classList.add('hidden');
+                document.getElementById('adminBtnNav').classList.add('hidden');
+                document.querySelectorAll('header, #pilares, #clases, #educativo, #membresia, #faq, footer').forEach(el => el.classList.remove('hidden-section'));
+                document.getElementById('userDashboard').classList.add('hidden-section');
+                window.isAdmin = false;
+            }
+        }
+
+        // ============================================================
+        // DASHBOARD CONTENT
+        // ============================================================
+        async function loadDashboardContent() {
+            const currentMonth = new Date().toISOString().slice(0, 7);
+            const classesContainer = document.getElementById('classesContainer');
+            const resourcesContainer = document.getElementById('resourcesContainer');
+            classesContainer.innerHTML = '';
+            resourcesContainer.innerHTML = '';
+
+            const { data, error } = await supabase
+                .from('membership_content')
+                .select('*')
+                .or(`month_year.eq.${currentMonth},cycle_date.eq.${new Date().toISOString().slice(0, 10)}`)
+                .eq('is_published', true)
+                .order('created_at', { ascending: false });
+
+            if (error) { console.warn('membership_content error', error); }
+            const items = data || [];
+
+            if (!items.length) {
+                classesContainer.innerHTML = '<p class="text-xs text-gray-500">Aún no hay clases publicadas este mes.</p>';
+                resourcesContainer.innerHTML = '<p class="text-xs text-gray-500">Aún no hay recursos publicados este mes.</p>';
+                return;
+            }
+
+            items.forEach(item => {
+                const isClass = ['GAP', 'Full Body', 'Cardio HIIT', 'Fuerza + Aerobico'].includes(item.category);
+                const icon = {
+                    'GAP': 'fa-video',
+                    'Full Body': 'fa-bolt',
+                    'Cardio HIIT': 'fa-fire',
+                    'Fuerza + Aerobico': 'fa-heart-pulse',
+                    'Rutina Fuerza': item.target_mode === 'Casa' ? 'fa-house' : 'fa-dumbbell',
+                    'Nutricion': 'fa-book-nutrition'
+                }[item.category] || 'fa-file';
+                const color = item.category === 'Nutricion' ? 'text-emerald-400' :
+                    item.category === 'Rutina Fuerza' && item.target_mode === 'Casa' ? 'text-blue-400' :
+                        item.category === 'Rutina Fuerza' ? 'text-indigo-400' : 'text-accent-pink';
+
+                const card = document.createElement('div');
+                card.className = 'bg-bg-raised p-4 rounded-xl border border-border-line flex items-center justify-between group hover:border-accent-pink transition cursor-pointer';
+                card.innerHTML = `
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-bg-base rounded-xl flex items-center justify-center ${color} text-xl"><i class="fas ${icon}"></i></div>
+                        <div>
+                            <h4 class="font-bold text-white text-sm">${item.title}</h4>
+                            <p class="text-xs text-gray-400">${item.description || item.target_mode || ''}</p>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-right text-gray-600 group-hover:text-accent-pink"></i>
+                `;
+                card.addEventListener('click', async () => {
+                    if (item.bunny_video_id) {
+                        try {
+                            const { data: { session } } = await supabase.auth.getSession();
+                            const res = await fetch(BUNNY_TOKEN_ENDPOINT, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': `Bearer ${session?.access_token}`
+                                },
+                                body: JSON.stringify({ videoId: item.bunny_video_id })
+                            });
+                            const json = await res.json();
+                            if (!res.ok) throw new Error(json.error || 'Error obteniendo token');
+                            window.open(json.embedUrl, '_blank');
+                        } catch (e) {
+                            alert('No se pudo reproducir: ' + e.message);
+                        }
+                    } else if (item.content_url) {
+                        window.open(item.content_url, '_blank');
+                    } else if (item.storage_path) {
+                        const { data: signed } = await supabase.storage.from('nutrition-pdfs').createSignedUrl(item.storage_path, 3600);
+                        if (signed?.signedUrl) window.open(signed.signedUrl, '_blank');
+                    }
+                });
+
+                if (isClass) classesContainer.appendChild(card);
+                else resourcesContainer.appendChild(card);
+            });
+
+            if (!classesContainer.children.length) classesContainer.innerHTML = '<p class="text-xs text-gray-500">Sin clases este mes.</p>';
+            if (!resourcesContainer.children.length) resourcesContainer.innerHTML = '<p class="text-xs text-gray-500">Sin recursos este mes.</p>';
+        }
+
+        // ============================================================
+        // PANEL ADMIN — PARÁMETROS
+        // ============================================================
+        window.saveMembershipParams = async () => {
+            const price = Number(document.getElementById('adminMonthlyPrice').value) || 40;
+            const whatsapp = document.getElementById('adminWhatsappNumber').value.trim();
+            const { error } = await supabase.from('landing_config').upsert({
+                key: 'membership_params',
+                value: { price, currency: 'USD', whatsapp_number: whatsapp, program_title: 'Programa de Entrenamiento y Estilo de Vida Saludable' }
+            });
+            if (error) return alert('Error: ' + error.message);
+            alert('Parámetros actualizados');
+            await loadLandingConfig();
+        };
+
+        window.saveContent = async () => {
+            const title = document.getElementById('adminHeroTitle').value;
+            const sub = document.getElementById('adminHeroSub').value;
+            const { error } = await supabase.from('landing_config').upsert({ key: 'hero_texts', value: { title, sub } });
+            if (error) return alert('Error: ' + error.message);
+            await supabase.from('landing_config').upsert({ key: 'text:hero_title', value: { text: title } });
+            await supabase.from('landing_config').upsert({ key: 'text:hero_sub', value: { text: sub } });
+            alert('Textos actualizados');
+            await loadLandingConfig();
+        };
+
+        window.uploadContent = async () => {
+            const type = document.getElementById('contentType').value;
+            const title = document.getElementById('contentTitle').value.trim();
+            const url = document.getElementById('contentUrl').value.trim();
+            if (!title || !url) return alert('Completa todos los campos');
+
+            const map = {
+                gap: { category: 'GAP', class_type: 'gap' },
+                full_body: { category: 'Full Body', class_type: 'full_body' },
+                hiit: { category: 'Cardio HIIT', class_type: 'hiit' },
+                aerobico: { category: 'Fuerza + Aerobico', class_type: 'aerobico' },
+                rutina_casa: { category: 'Rutina Fuerza', class_type: 'rutina_casa' },
+                rutina_gym: { category: 'Rutina Fuerza', class_type: 'rutina_gym' },
+                nutricion: { category: 'Nutricion', class_type: 'nutricion' }
+            };
+            const cfg = map[type] || { category: 'Full Body', class_type: type };
+
+            const { error } = await supabase.from('membership_content').insert({
+                cycle_date: new Date().toISOString().slice(0, 10),
+                category: cfg.category,
+                title,
+                content_url: url,
+                class_type: cfg.class_type,
+                month_year: new Date().toISOString().slice(0, 7),
+                is_published: true
+            });
+            if (error) return alert('Error: ' + error.message);
+            alert('Contenido publicado.');
+            document.getElementById('contentTitle').value = '';
+            document.getElementById('contentUrl').value = '';
+        };
+
+        async function loadAdminData() {
+            const list = document.getElementById('userList');
+            list.innerHTML = '<p class="text-xs text-gray-500">Cargando...</p>';
+            const { data, error } = await supabase.from('profiles').select('email, plan_status, created_at').order('created_at', { ascending: false }).limit(20);
+            if (error) { list.innerHTML = `<p class="text-xs text-red-400">${error.message}</p>`; return; }
+            list.innerHTML = '';
+            if (!data?.length) { list.innerHTML = '<p class="text-xs text-gray-500">Sin alumnas aún.</p>'; return; }
+            data.forEach(u => {
+                const color = u.plan_status === 'active' ? 'text-green-400' : u.plan_status === 'past_due' ? 'text-yellow-400' : 'text-red-400';
+                list.innerHTML += `
+                    <div class="flex justify-between items-center text-xs border-b border-gray-800 pb-2">
+                        <span class="text-white truncate w-40">${u.email}</span>
+                        <span class="${color} font-bold uppercase">${u.plan_status || 'inactive'}</span>
+                    </div>`;
+            });
+        }
+
+        // ============================================================
+        // MODO EDICIÓN VISUAL IN-PLACE (CMS AUTÓNOMO)
+        // ============================================================
+        function createHiddenFileInput() {
+            let inp = document.getElementById('__media_upload_input');
+            if (inp) return inp;
+            inp = document.createElement('input');
+            inp.type = 'file';
+            inp.accept = 'image/*,video/*';
+            inp.id = '__media_upload_input';
+            inp.className = 'hidden';
+            inp.addEventListener('change', async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const key = inp.dataset.currentKey;
+                const kind = inp.dataset.currentKind || 'image';
+                if (!key) return alert('Key de media no encontrada');
+                try {
+                    const isVideo = file.type.startsWith('video/');
+                    const path = `${key}-${Date.now()}-${file.name}`;
+                    const bucket = 'landing-media';
+                    const { error: upErr } = await supabase.storage.from(bucket).upload(path, file, { upsert: true, cacheControl: '3600' });
+                    if (upErr) throw upErr;
+                    const { data: pub } = supabase.storage.from(bucket).getPublicUrl(path);
+                    const publicUrl = pub?.publicUrl || '';
+                    await supabase.from('landing_config').upsert({ key: `media:${key}`, value: publicUrl });
+
+                    const img = document.querySelector(`img[data-image-key="${key}"]`);
+                    const vid = document.querySelector(`video[data-media-key="${key}"]`) || document.querySelector(`video[data-image-key="${key}"]`);
+                    if (img && !isVideo) img.src = publicUrl;
+                    if ((vid || isVideo)) {
+                        let videoEl = vid;
+                        if (!videoEl && img) {
+                            videoEl = document.createElement('video');
+                            videoEl.controls = true;
+                            videoEl.className = img.className;
+                            videoEl.dataset.mediaKey = key;
+                            img.replaceWith(videoEl);
+                        }
+                        if (videoEl) {
+                            videoEl.innerHTML = '';
+                            const source = document.createElement('source');
+                            source.src = publicUrl;
+                            source.type = file.type;
+                            videoEl.appendChild(source);
+                            videoEl.load();
+                        }
+                    }
+                    alert('Media actualizada');
+                } catch (err) {
+                    console.error(err);
+                    alert('Error al subir: ' + (err.message || err));
+                } finally {
+                    inp.value = '';
+                    delete inp.dataset.currentKey;
+                }
+            });
+            document.body.appendChild(inp);
+            return inp;
+        }
+
+        function enableImageEditing() {
+            if (!window.isAdmin) return;
+            document.querySelectorAll('img[data-image-key]').forEach(img => {
+                if (img._editAttached) return;
+                img.style.cursor = 'pointer';
+                img.title = img.title || 'Click para editar (admin)';
+                img.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const inp = createHiddenFileInput();
+                    inp.dataset.currentKey = img.dataset.imageKey;
+                    inp.dataset.currentKind = 'image';
+                    inp.click();
+                });
+                img._editAttached = true;
+            });
+            document.querySelectorAll('video[data-media-key]').forEach(vid => {
+                if (vid._editAttached) return;
+                vid.style.cursor = 'pointer';
+                vid.addEventListener('click', (e) => {
+                    if (e.target.tagName === 'VIDEO') e.preventDefault();
+                    const inp = createHiddenFileInput();
+                    inp.dataset.currentKey = vid.dataset.mediaKey;
+                    inp.dataset.currentKind = 'video';
+                    inp.click();
+                });
+                vid._editAttached = true;
+            });
+        }
+
+        function createTextToolbar() {
+            let t = document.getElementById('__text_edit_toolbar');
+            if (t) return t;
+            t = document.createElement('div');
+            t.id = '__text_edit_toolbar';
+            t.style.position = 'fixed';
+            t.style.zIndex = 99999;
+            t.style.minWidth = '280px';
+            t.style.background = '#0f0c10';
+            t.style.border = '1px solid #2b2630';
+            t.style.padding = '10px';
+            t.style.borderRadius = '10px';
+            t.style.boxShadow = '0 6px 24px rgba(0,0,0,0.6)';
+            t.style.color = '#fff';
+            t.style.display = 'none';
+            t.innerHTML = `
+                <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
+                    <input id="__text_edit_input" style="flex:1;padding:6px;border-radius:6px;background:#0b0a0c;border:1px solid #332b36;color:#fff"/>
+                </div>
+                <div style="display:flex;gap:6px;margin-bottom:8px;align-items:center;">
+                    <select id="__text_font" style="flex:1;padding:6px;border-radius:6px;background:#0b0a0c;border:1px solid #332b36;color:#fff">
+                        <option value="">(Fuente)</option>
+                        <option value="Poppins, sans-serif">Poppins</option>
+                        <option value="Montserrat, sans-serif">Montserrat</option>
+                        <option value="Arial, sans-serif">Arial</option>
+                    </select>
+                    <input id="__text_size" type="number" placeholder="px" style="width:70px;padding:6px;border-radius:6px;background:#0b0a0c;border:1px solid #332b36;color:#fff"/>
+                </div>
+                <div style="display:flex;gap:6px;align-items:center;margin-bottom:8px;">
+                    <input id="__text_color" type="color" style="width:44px;height:34px;padding:0;border-radius:6px;border:1px solid #332b36;background:#fff" />
+                    <button id="__text_bold" style="padding:6px 10px;border-radius:6px;background:#161218;border:1px solid #332b36;color:#fff">B</button>
+                    <button id="__text_italic" style="padding:6px 10px;border-radius:6px;background:#161218;border:1px solid #332b36;color:#fff">i</button>
+                    <div style="flex:1"></div>
+                    <button id="__text_save" style="background:#0ea5a0;padding:6px 10px;border-radius:6px;border:none;color:#071013;font-weight:700">Guardar</button>
+                    <button id="__text_cancel" style="background:#2b2630;padding:6px 10px;border-radius:6px;border:none;color:#fff">X</button>
+                </div>
+            `;
+            document.body.appendChild(t);
+            t.addEventListener('click', e => e.stopPropagation());
+
+            t.querySelector('#__text_cancel').addEventListener('click', () => { t.style.display = 'none'; });
+            t.querySelector('#__text_bold').addEventListener('click', function () { this.classList.toggle('active'); this.style.background = this.classList.contains('active') ? '#0ea5a0' : '#161218'; });
+            t.querySelector('#__text_italic').addEventListener('click', function () { this.classList.toggle('active'); this.style.background = this.classList.contains('active') ? '#0ea5a0' : '#161218'; });
+
+            t.querySelector('#__text_save').addEventListener('click', async () => {
+                const key = t.dataset.currentKey;
+                const target = t._target;
+                if (!key || !target) return alert('Sin objetivo');
+                const text = document.getElementById('__text_edit_input').value;
+                const font = document.getElementById('__text_font').value;
+                const size = document.getElementById('__text_size').value;
+                const color = document.getElementById('__text_color').value;
+                const bold = document.getElementById('__text_bold').classList.contains('active');
+                const italic = document.getElementById('__text_italic').classList.contains('active');
+
+                target.innerHTML = text;
+                target.style.fontFamily = font || '';
+                target.style.fontSize = size ? size + 'px' : '';
+                target.style.color = color || '';
+                target.style.fontWeight = bold ? '700' : '';
+                target.style.fontStyle = italic ? 'italic' : '';
+
+                const payload = { text, fontFamily: font || null, fontSize: size ? size + 'px' : null, color: color || null, fontWeight: bold ? '700' : null, fontStyle: italic ? 'italic' : null };
+                const { error } = await supabase.from('landing_config').upsert({ key: `text:${key}`, value: payload });
+                if (error) return alert('Error: ' + error.message);
+                alert('Texto guardado');
+                t.style.display = 'none';
+            });
+
+            return t;
+        }
+
+        function rgbToHex(rgb) {
+            const m = rgb.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
+            if (!m) return '#ffffff';
+            return '#' + [1, 2, 3].map(i => parseInt(m[i]).toString(16).padStart(2, '0')).join('');
+        }
+
+        function openTextEditorFor(el) {
+            const key = el.dataset.textKey;
+            if (!key) return;
+            const t = createTextToolbar();
+            t.dataset.currentKey = key;
+            t._target = el;
+            const rect = el.getBoundingClientRect();
+            t.style.top = Math.max(12, rect.top - 160) + 'px';
+            t.style.left = Math.max(12, Math.min(window.innerWidth - 300, rect.left)) + 'px';
+            document.getElementById('__text_edit_input').value = (el.innerText || '').trim();
+            const comp = getComputedStyle(el);
+            document.getElementById('__text_font').value = comp.fontFamily || '';
+            document.getElementById('__text_size').value = parseInt(comp.fontSize) || '';
+            document.getElementById('__text_color').value = rgbToHex(comp.color || '#fff');
+            const boldBtn = document.getElementById('__text_bold');
+            const italicBtn = document.getElementById('__text_italic');
+            boldBtn.classList.toggle('active', parseInt(comp.fontWeight) >= 700);
+            boldBtn.style.background = boldBtn.classList.contains('active') ? '#0ea5a0' : '#161218';
+            italicBtn.classList.toggle('active', comp.fontStyle === 'italic');
+            italicBtn.style.background = italicBtn.classList.contains('active') ? '#0ea5a0' : '#161218';
+            t.style.display = 'block';
+        }
+
+        function enableTextEditing() {
+            if (!window.isAdmin) return;
+            let counter = window.__text_auto_counter || 1;
+            document.querySelectorAll('h1,h2,h3,h4,h5,p,span,li').forEach(el => {
+                if (!el.textContent || el.textContent.trim().length < 2) return;
+                if (el.closest('#adminPanel') || el.closest('nav') || el.closest('#__text_edit_toolbar')) return;
+                if (['A', 'BUTTON', 'INPUT', 'TEXTAREA', 'SELECT'].includes(el.tagName)) return;
+                if (!el.dataset.textKey) el.dataset.textKey = `auto_${el.tagName.toLowerCase()}_${counter++}`;
+                if (el._textEditAttached) return;
+                el.style.cursor = 'text';
+                el.addEventListener('click', (e) => { e.stopPropagation(); openTextEditorFor(el); });
+                el._textEditAttached = true;
+            });
+            window.__text_auto_counter = counter;
+        }
+
+        function enableIconEditing() {
+            if (!window.isAdmin) return;
+            document.querySelectorAll('[data-icon-key]').forEach(host => {
+                if (host._iconEditAttached) return;
+                host.style.cursor = 'pointer';
+                host.addEventListener('click', async (e) => {
+                    e.stopPropagation();
+                    const key = host.dataset.iconKey;
+                    const current = host.querySelector('i')?.className || '';
+                    const next = prompt(`Clase FontAwesome para "${key}":`, current);
+                    if (next === null) return;
+                    const i = host.querySelector('i');
+                    if (i) i.className = next;
+                    await supabase.from('landing_config').upsert({ key: `icon:${key}`, value: next });
+                    alert('Icono actualizado');
+                });
+                host._iconEditAttached = true;
+            });
+        }
+
+        // ============================================================
+        // INICIALIZACIÓN
+        // ============================================================
+        supabase.auth.onAuthStateChange(() => { checkUserStatus(); });
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadLandingConfig();
+            await checkUserStatus();
+        });
+        // Fallback si DOMContentLoaded ya disparó
+        if (document.readyState !== 'loading') {
+            loadLandingConfig();
+            checkUserStatus();
+        }
+    </script>
+</body>
+
+</html>

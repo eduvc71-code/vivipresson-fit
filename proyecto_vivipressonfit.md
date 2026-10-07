@@ -1,108 +1,159 @@
 # DOCUMENTO DE ARQUITECTURA Y ESPECIFICACIÓN DE INGENIERÍA
 ## Proyecto: Plataforma de Membresías Fitness — VIVIPREFIT
-**Dominio Objetivo:** vivipressonfit.com
-**Estado de Definición:** Producción / Listo para Implementación
----
-## 1. RESUMEN EJECUTIVO Y OBJETIVOS
+**Concepto Comercial:** Programa de Entrenamiento y Estilo de Vida Saludable (Renovación Mensual)  
+**Dominio Objetivo:** vivipressonfit.com  
+**Modelo de Cobro:** Suscripción mensual unificada de **$us. 40.- / mes**  
+**Estado:** Producción / Listo para Implementación  
 
-Este documento define la arquitectura técnica para la plataforma de membresías fitness VIVIPREFIT. El sistema reemplaza el ecosistema tradicional basado en plugins de WordPress por una arquitectura desacoplada (Jamstack) de alto rendimiento, costos fijos mínimos y máxima seguridad de contenido.
-
-### Objetivos Clave:
-*   **Velocidad de Carga:** Respuesta del frontend en milisegundos mediante distribución global en el borde (Edge CDN).
-*   **Persistencia de Parametrización:** Modificación dinámica de precios y contenidos públicos mediante un panel de control administrativo protegido.
-*   **Automatización de Cobros:** Sincronización en tiempo real del ciclo de vida de las suscripciones (altas, bajas y renovaciones).
-*   **Protección Contra Piratería:** Mitigación de descargas ilegales de video mediante tokens firmados con expiración temporal.
----
-## 2. ARQUITECTURA DE SOFTWARE (DESACOPLADA)
-
-El sistema opera bajo un modelo de responsabilidad única dividido en cuatro capas:
-+--------------------------------------------------------------------------+|                        CAPA DE PRESENTACIÓN (Frontend)                   ||                        HTML5 / Tailwind CSS / Vercel Edge                |+--------------------------------------------------------------------------+│Consultas API      │     Redirección Seguroy Autenticación    │     a Pasarela de Pago▼+------------------------------------+    +--------------------------------+|      CAPA DE DATOS (BaaS)          |    |   CAPA TRANSACCIONAL (Pagos)   ||   Supabase / PostgreSQL con RLS    |    |   Stripe Billing / Checkout    |+------------------------------------+    +--------------------------------+│                                       ││ Actualiza Perfil (Webhooks)           │◄───────────────────────────────────────┘││ Genera URL Firmada (Token Expirable)▼+--------------------------------------------------------------------------+|                     CAPA MULTIMEDIA (Streaming Seguro)                    ||        
-                Bunny.net / Bunny Stream 
-                         |
 ---
 
-## 3. MODELO DE DATOS (ESQUEMA RELACIONAL POSTGRESQL)
+## 1. RESUMEN EJECUTIVO Y ALCANCE FUNCIONAL
 
-El backend utiliza dos tablas principales dentro del esquema público de Supabase para separar la configuración del sitio de la información sensible de facturación.
+Este documento define la arquitectura técnica y funcional para la plataforma de membresías fitness VIVIPREFIT. El sistema opera sobre una arquitectura desacoplada (Jamstack) de alto rendimiento, costos operativos mínimos, seguridad de contenido audiovisual y automatización total del ciclo de cobros.
+
+La propuesta comercial se unifica en una **membresía integral mensual de $us. 40.-**, eliminando la fragmentación en tiers complejos y enfocándose en 4 pilares centrales:
+
+### 1.1. Pilares del Programa:
+1. **Biblioteca de Clases Grabadas (Streaming Seguro):**
+   * **GAP:** Glúteos, Abdomen y Piernas para máxima firmeza y tonificación.
+   * **Full Body:** Entrenamiento integral de todos los grupos musculares.
+   * **Cardio HIIT:** Rutinas de alta intensidad para quema calórica y resistencia cardiovascular.
+   * **Fuerza + Aeróbico:** Combinación balanceada de potencia muscular y capacidad aeróbica.
+2. **Plan de Entrenamiento Mensual:**
+   * **Rutinas de Fuerza (3 veces por semana):** Estructuras adaptables para realizar en casa o en gimnasio.
+3. **Nutrición y Acompañamiento:**
+   * **Educación Alimentaria:** Guías y materiales sobre alimentación consciente, saludable y sostenible.
+   * **Soporte Personalizado vía WhatsApp:** Canal directo y verificado para resolución continua de consultas y acompañamiento motivacional.
+4. **Dinámica del Servicio:**
+   * **Renovación Mensual Continua:** Renovación de rutinas, clases y recursos cada ciclo para asegurar progresión y retención.
+
+---
+
+## 2. ARQUITECTURA DE SOFTWARE (JAMSTACK DESACOPLADO)
+
+```
++--------------------------------------------------------------------------+
+|                        CAPA DE PRESENTACIÓN (Frontend)                   |
+|                   HTML5 / Tailwind CSS / Vercel Edge / PWA               |
+|   - Landing Page con Copy del Programa ($us 40/mes)                      |
+|   - Dashboard de Alumna (Biblioteca GAP/Full Body/HIIT/Fuerza)           |
+|   - Widget de Acceso Directo a WhatsApp verificado                       |
++--------------------------------------------------------------------------+
+       │ Consultas API y Auth             │ Redirección Checkout ($40/mes)
+       ▼                                  ▼
++------------------------------------+    +--------------------------------+
+|       CAPA DE DATOS (BaaS)         |    |   CAPA TRANSACCIONAL (Pagos)   |
+|   Supabase / PostgreSQL con RLS    |    |   Stripe Billing / Checkout    |
+|   - Profiles (Suscripción activa)  |    |   - Precio: $40.00 USD / mes   |
+|   - Contenidos y Rutinas           |    +--------------------------------+
++------------------------------------+                     │
+       │                                                   │ Webhooks
+       │ Genera Token Expirable (HLS)                      ▼
+       │                              Actualiza estado: 'active' / 'inactive'
+       ▼
++--------------------------------------------------------------------------+
+|                     CAPA MULTIMEDIA & RECURSOS                           |
+|   - Bunny Stream: Streaming de video con DRM y bloqueo de dominio        |
+|   - Supabase Storage: Bucket privado para PDFs de Educación Alimentaria  |
++--------------------------------------------------------------------------+
+```
+
+---
+
+## 3. MODELO DE DATOS (POSTGRESQL / SUPABASE)
 
 ### 3.1. Tabla: `landing_config` (Parametrización Pública)
-Almacena los valores dinámicos expuestos en la Landing Page que pueden ser alterados desde el panel administrador.
+Almacena variables dinámicas visibles en la Landing Page que pueden ser editadas desde el panel administrativo.
 
-| Campo | Tipo de Datos | Restricciones | Descripción |
+| Campo | Tipo | Restricción | Descripción |
 | :--- | :--- | :--- | :--- |
-| `id` | TEXT | PRIMARY KEY | Identificador único (Fijo: 'main') |
-| `coach_name` | TEXT | NOT NULL | Nombre de la entrenadora (Ej: 'Vivi') |
-| `precio_basico` | NUMERIC | NOT NULL | Precio del Plan Básico |
-| `precio_premium` | NUMERIC | NOT NULL | Precio del Plan Premium |
-| `precio_anual` | NUMERIC | NOT NULL | Precio del Plan Anual |
+| `id` | TEXT | PRIMARY KEY | Identificador único (Fijo: `'main'`) |
+| `coach_name` | TEXT | NOT NULL | Nombre de la coach (`'Vivi'`) |
+| `program_title` | TEXT | NOT NULL | 'Programa de Entrenamiento y Estilo de Vida Saludable' |
+| `precio_mensual` | NUMERIC | NOT NULL | Valor actual: `40.00` |
+| `currency` | TEXT | DEFAULT 'USD' | Código de divisa (`USD`) |
+| `whatsapp_support_number`| TEXT | NOT NULL | Línea oficial de WhatsApp para soporte |
 | `updated_at` | TIMESTAMPTZ | DEFAULT NOW() | Auditoría de última modificación |
 
 ### 3.2. Tabla: `profiles` (Usuarios y Suscripciones)
-Almacena el estado transaccional de cada alumna. Está vinculada directamente al sistema de autenticación nativo de Supabase (`auth.users`).
+Maneja la información de membresía y sincronización con pasarela.
 
-| Campo | Tipo de Datos | Restricciones | Descripción |
+| Campo | Tipo | Restricción | Descripción |
 | :--- | :--- | :--- | :--- |
-| `id` | UUID | REFERENCES auth.users | Identificador único de usuario (UID) |
-| `email` | TEXT | UNIQUE, NOT NULL | Correo de acceso de la alumna |
-| `stripe_customer_id`| TEXT | Opcional | ID único asignado por Stripe |
-| `stripe_sub_id` | TEXT | Opcional | ID de suscripción asignado por Stripe |
-| `plan_status` | TEXT | DEFAULT 'inactive' | Estados: 'active', 'canceled', 'inactive' |
-| `plan_tier` | TEXT | DEFAULT 'none' | Niveles: 'basico', 'premium', 'anual', 'none' |
-| `updated_at` | TIMESTAMPTZ | DEFAULT NOW() | Fecha de sincronización de datos |
+| `id` | UUID | REFERENCES auth.users | Identificador de usuario en Supabase Auth |
+| `email` | TEXT | UNIQUE, NOT NULL | Correo de la alumna |
+| `full_name` | TEXT | Opcional | Nombre de la alumna |
+| `phone_number` | TEXT | Opcional | Teléfono para verificación en canal WhatsApp |
+| `stripe_customer_id` | TEXT | Opcional | ID de cliente en Stripe |
+| `stripe_sub_id` | TEXT | Opcional | ID de la suscripción recurrente en Stripe |
+| `plan_status` | TEXT | DEFAULT 'inactive' | Estados: `'active'`, `'canceled'`, `'past_due'`, `'inactive'` |
+| `current_period_end` | TIMESTAMPTZ | Opcional | Fecha de vencimiento del período abonado |
+| `updated_at` | TIMESTAMPTZ | DEFAULT NOW() | Fecha de última sincronización |
+
+### 3.3. Tabla: `membership_content` (Contenido Mensual Dinámico)
+Organiza los recursos renovables mes a mes.
+
+| Campo | Tipo | Restricción | Descripción |
+| :--- | :--- | :--- | :--- |
+| `id` | UUID | PRIMARY KEY DEFAULT gen_random_uuid() | Identificador único del recurso |
+| `cycle_date` | DATE | NOT NULL | Mes/Año correspondiente al ciclo (ej. `2026-10-01`) |
+| `category` | TEXT | NOT NULL | `'GAP'`, `'Full Body'`, `'Cardio HIIT'`, `'Fuerza + Aerobico'`, `'Rutina Fuerza'`, `'Nutricion'` |
+| `title` | TEXT | NOT NULL | Título de la clase o material |
+| `bunny_video_id` | TEXT | Opcional | ID del video en Bunny Stream para streaming cifrado |
+| `storage_path` | TEXT | Opcional | Ruta relativa en Supabase Storage (para guías nutricionales) |
+| `target_mode` | TEXT | DEFAULT 'Ambos' | `'Casa'`, `'Gimnasio'`, `'Ambos'` |
+| `is_published` | BOOLEAN | DEFAULT false | Control de visibilidad pública para alumnas |
+| `created_at` | TIMESTAMPTZ | DEFAULT NOW() | Fecha de alta del recurso |
 
 ---
 
 ## 4. POLÍTICAS DE SEGURIDAD (ROW LEVEL SECURITY - RLS)
 
-Para blindar la base de datos sin necesidad de un servidor intermedio permanente, se aplican reglas de aislamiento directamente en el motor PostgreSQL de Supabase:
+### 4.1. `landing_config`
+* **SELECT:** Abierto al rol público (`anon`, `authenticated`).
+* **UPDATE:** Restringido a la cuenta de administración certificada (`auth.jwt() ->> 'email' = 'admin@vivipressonfit.com'`).
 
-### Reglas para `landing_config`:
-*   **Permiso de Lectura (SELECT):** Permitido para usuarios anónimos (`anon`). Cualquier visitante web puede ver los precios actuales.
-*   **Permiso de Escritura (UPDATE):** Restringido estrictamente. El sistema verifica mediante una función JWT que el correo del usuario autenticado coincida exactamente con la dirección del administrador jefe (`admin@vivipressonfit.com`).
+### 4.2. `profiles`
+* **SELECT/UPDATE:** Restringido estrictamente a la fila propia mediante `auth.uid() = id`.
+* **SERVICE_ROLE:** Las funciones de Webhook actualizan el registro saltándose RLS con clave segura de backend.
 
-### Reglas para `profiles`:
-*   **Aislamiento de Filas:** Se valida mediante la regla `auth.uid() = id`. Ningún usuario puede consultar, modificar o interceptar el perfil o estado de otra alumna de la plataforma.
+### 4.3. `membership_content`
+* **SELECT:** Permitido solo si el usuario autenticado tiene estado de suscripción vigente:
+  ```sql
+  EXISTS (
+    SELECT 1 FROM profiles 
+    WHERE profiles.id = auth.uid() 
+      AND profiles.plan_status = 'active'
+  )
+  ```
+* **INSERT / UPDATE / DELETE:** Exclusivo para el rol administrador.
 
 ---
 
 ## 5. FLUJOS LÓGICOS DE OPERACIÓN
 
-### 5.1. Ciclo de Compra y Aprovisionamiento
-1.  La usuaria selecciona una modalidad de suscripción en `vivipressonfit.com`.
-2.  El frontend invoca el SDK de Stripe y redirige a la cliente hacia una sesión segura de **Stripe Checkout**.
-3.  La cliente digita su método de pago. Al completarse con éxito, Stripe procesa la transacción financiera de forma recurrente.
-4.  Stripe emite una notificación asíncrona (**Webhook**) con el evento `customer.subscription.created` apuntando hacia el endpoint de la aplicación.
-5.  La función receptora extrae el ID de usuario, el correo y el plan seleccionado, actualizando inmediatamente la tabla `profiles` en Supabase con los permisos correspondientes.
+### 5.1. Proceso de Alta y Facturación ($us. 40.-/mes)
+1. **Checkout:** La usuaria pulsa *"Comenzar ahora"* e ingresa al flujo de Stripe Checkout con cobro recurrente mensual de $40 USD.
+2. **Webhook Receiver:** Stripe emite `checkout.session.completed` y `invoice.paid`. El backend valida la firma criptográfica y actualiza `profiles.plan_status = 'active'`.
+3. **Acceso Inmediato:** La usuaria es redirigida a su dashboard con todas las categorías desbloqueadas.
 
-### 5.2. Verificación de Acceso y Streaming de Video Protegido
-1.  La alumna autenticada ingresa al dashboard de rutinas.
-2.  La aplicación consulta el estado de la fila correspondiente al UID en la tabla `profiles`.
-3.  Si `plan_status` es idéntico a `'active'`, el backend genera una firma criptográfica con un tiempo de expiración corto (Ej: 120 minutos) conectada a la API de **Bunny Stream**.
-4.  El video se reproduce fluidamente. El reproductor rechaza cualquier intento de hotlinking (reproducción fuera de `vivipressonfit.com`) o extracción del archivo de origen por inspectores de código del navegador.
-5.  Si el cobro recurrente falla en Stripe, el Webhook cambia el estado a `'inactive'`, revocando instantáneamente los permisos de visualización.
+### 5.2. Visualización Segura de Video
+1. La alumna selecciona una clase (GAP, Full Body, Cardio HIIT o Fuerza + Aeróbico).
+2. El frontend solicita un token de sesión a una Supabase Edge Function.
+3. La función verifica que `plan_status == 'active'` y emite un token de Bunny Stream firmado con expiración corta (120 minutos).
+4. El video se reproduce por HLS bloqueando descargas directas y restringiendo el origen a `vivipressonfit.com`.
+
+### 5.3. Acompañamiento por WhatsApp
+* Dentro del dashboard autenticado se incluye un enlace directo parametrizado:
+  `https://wa.me/{whatsapp_support_number}?text=Hola%20Vivi,%20soy%20{full_name}%20y%20tengo%20una%20consulta`
+* Esto asegura un canal ágil y personal de atención para las alumnas.
 
 ---
 
-## 6. PLAN DE IMPLEMENTACIÓN TÉCNICA (CRONOGRAMA DE 5 FASES)
+## 6. CRONOGRAMA DE EJECUCIÓN (5 FASES)
 
-+------------------+     +------------------+     +------------------+| FASE 1: PROVISIÓN| ──> | FASE 2: BACKEND  | ──> | FASE 3: STRIPE   || Dominios y DNS   |     | Tablas y RLS     |     | Productos y Hooks|+------------------+     +------------------+     +------------------+│▼+------------------+     +------------------+     +------------------+| PROYECTO EN VIVO | ◄── | FASE 5: DESPLIEGUE| ◄── | FASE 4: FRONTEND || SSL & Producción |     | Vercel CI/CD     |     | Dinámico y Admin |+------------------+     +------------------+     +------------------+
-### Fase 1: Provisión de Infraestructura (Día 1)
-*   Adquisición del dominio `vivipressonfit.com` en Porkbun o Namecheap con privacidad WHOIS activa.
-*   Apertura y vinculación de entornos de desarrollo en Supabase, Stripe (Modo Test) y Vercel.
-
-### Fase 2: Configuración de Datos en Supabase (Días 2-3)
-*   Ejecución de los scripts de creación de tablas en la consola SQL de Supabase.
-*   Habilitación de Row Level Security (RLS) y declaración de las políticas de restricción para el perfil administrador.
-
-### Fase 3: Pasarela e Infraestructura Multimedia (Día 4)
-*   Alta de los tres tiers comerciales en Stripe Billing para cobros automatizados recurrentes.
-*   Creación de la zona de almacenamiento de video en Bunny Stream con bloqueo de dominios externos.
-
-### Fase 4: Integración del Frontend Dinámico (Días 5-7)
-*   Sustitución de las variables estáticas del prototipo HTML por llamadas dinámicas mediante el SDK de Supabase.
-*   Implementación de la lógica del panel administrativo (engranaje) para ejecutar la edición directa de la tabla `landing_config`.
-
-### Fase 5: Pruebas de Estrés y Despliegue de Producción (Días 8-9)
-*   Ejecución de simulaciones de pasarela de pago en ambiente Sandbox (tarjetas de prueba).
-*   Vinculación del repositorio Git a Vercel, configuración de variables de entorno seguras y direccionamiento final de los registros DNS del dominio.
-
+* **Fase 1: Infraestructura y Entornos (Día 1):** Configuración de dominio, DNS, repositorio Git y cuenta de Stripe en modo Sandbox.
+* **Fase 2: Esquema de Datos y RLS (Días 2-3):** Creación de tablas (`landing_config`, `profiles`, `membership_content`) y políticas de seguridad en Supabase.
+* **Fase 3: Pasarela y Video CDN (Día 4):** Configuración de producto recurrente de $40/mes en Stripe y zona de almacenamiento Bunny Stream.
+* **Fase 4: Frontend y Dashboard (Días 5-6):** Implementación de la Landing Page con el copy persuasivo, catálogo mensual y botón de soporte WhatsApp.
+* **Fase 5: Pruebas y Despliegue (Día 7):** Auditoría de webhooks, verificación de streaming protegido y despliegue final en Vercel.

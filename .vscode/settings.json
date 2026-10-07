@@ -1,0 +1,10 @@
+﻿{
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "files.associations": {
+    "*.sql": "sql",
+    "*.toml": "toml"
+  },
+  "deno.enablePaths": ["supabase/functions"],
+  "deno.unstable": true
+}

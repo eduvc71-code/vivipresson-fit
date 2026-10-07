@@ -1,0 +1,26 @@
+﻿name: VIVIPREFIT - Verify
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+      - name: Verify structure
+        run: |
+          test -f frontend/index.html
+          test -f database/schema.sql
+          test -f supabase/functions/stripe-webhook/index.ts
+          test -f supabase/functions/bunny-token/index.ts
+      - name: Validate JSON
+        run: node -e "JSON.parse(require('fs').readFileSync('package.json','utf8'))"
+      - name: Validate HTML
+        run: grep -q "id=\"adminPanel\"" frontend/index.html

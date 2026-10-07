@@ -1,0 +1,27 @@
+﻿{
+  "name": "viviprefit",
+  "version": "1.0.0",
+  "description": "Plataforma de membresias fitness VIVIPREFIT",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npx serve frontend -p 3000",
+    "start": "npx serve frontend -p 3000",
+    "supabase:start": "supabase start",
+    "supabase:stop": "supabase stop",
+    "supabase:push": "supabase db push",
+    "supabase:functions": "supabase functions deploy stripe-webhook bunny-token",
+    "devops:verify": "powershell -ExecutionPolicy Bypass -File scripts/devops/verify_viviprefit.ps1",
+    "devops:deploy": "bash scripts/devops/deploy.sh"
+  },
+  "devDependencies": {
+    "supabase": "^1.200.0",
+    "serve": "^14.2.0",
+    "vercel": "^33.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "license": "UNLICENSED"
+}

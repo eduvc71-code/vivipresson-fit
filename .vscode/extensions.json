@@ -1,0 +1,8 @@
+﻿{
+  "recommendations": [
+    "denoland.vscode-deno",
+    "supabase.vscode-supabase-extension",
+    "bradlc.vscode-tailwindcss",
+    "esbenp.prettier-vscode"
+  ]
+}

@@ -1,0 +1,36 @@
+﻿# Dependencias
+node_modules/
+
+# Build
+dist/
+build/
+.vercel
+
+# Env
+.env
+.env.local
+!.env.example
+
+# Supabase
+.supabase/
+supabase/.temp/
+
+# Logs
+logs/
+*.log
+
+# Temp
+.tmp/
+
+# Editor
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Media pesada
+media/videos/*.mp4
+media/pdfs/*.pdf
